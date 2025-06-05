@@ -22,9 +22,10 @@ class RQNetwork(nn.Module):
 
 
 class RQNAgent:
-    def __init__(self, state_dim, action_dim):
+    def __init__(self, state_dim, action_dim, num_motors=2):
         self.state_dim = state_dim
-        self.action_dim = action_dim  # 이산 행동 개수 (예: 27)
+        self.action_dim = action_dim  # 이산 행동 개수 (예: 9)
+        self.num_motors = num_motors
         self.memory = deque(maxlen=100000)
         self.batch_size = 64
         self.gamma = 0.99
@@ -42,14 +43,12 @@ class RQNAgent:
         self.update_target_network()
 
         # 행동 후보 맵핑 (이산→연속 속도)
-        # 예: 속도 후보 = [-1.0, 0.0, +1.0] 
-        # 조합으로 총 27개 행동 매핑
+        # 예: 속도 후보 = [-1.0, 0.0, +1.0]
+        # Motor 1,3 두 축만 사용하므로 조합은 3^2 = 9개
+        from itertools import product
         self.vel_candidates = [-1.0, 0.0, 1.0]
-        self.discrete_to_vel = []
-        for v1 in self.vel_candidates:
-            for v2 in self.vel_candidates:
-                for v3 in self.vel_candidates:
-                    self.discrete_to_vel.append([v1, v2, v3])
+        self.discrete_to_vel = [list(p) for p in product(self.vel_candidates, repeat=self.num_motors)]
+        assert len(self.discrete_to_vel) == self.action_dim, "action_dim과 행동 매핑 수가 일치하지 않습니다."
 
     def update_target_network(self):
         self.target_model.load_state_dict(self.model.state_dict())
