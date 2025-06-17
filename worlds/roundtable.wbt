@@ -1,0 +1,181 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/solids/protos/SolidRoundedBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/GalvanizedMetal.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/solids/protos/SolidTorus.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/BrushedAluminium.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/tools/protos/CapScrew.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/HammeredCopper.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+  info [
+    "Example world demonstrating the use of a controlled BallJoint."
+  ]
+  title "Motor 3"
+  lineScale 0.3
+}
+Viewpoint {
+  orientation -0.18922145918992855 -0.5409355375217478 0.8195022779883482 5.356643937933676
+  position -3.924585861733477 3.935739089133339 3.0439371482411675
+  follow "robot"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+DEF ARENA RectangleArena {
+  floorSize 10 10
+}
+DEF RoundTable Robot {
+  children [
+    SolidRoundedBox {
+      translation 0 0 0
+      size 0.2 0.2 0.01
+      borderRadius 0.005
+      appearance GalvanizedMetal {
+      }
+    }
+    SolidTorus {
+      translation 0 0 0
+      majorRadius 0.03
+      minorRadius 0.02
+      appearance BrushedAluminium {
+      }
+    }
+    CapScrew {
+      translation 0.08 0.08 0.004998810332227679
+      rotation 0.5773502691896257 0.5773502691896257 -0.5773502691896257 2.0943950000000005
+    }
+    CapScrew {
+      translation 0.08 -0.08 0.004998810332227679
+      rotation 0.5773502691896257 0.5773502691896257 -0.5773502691896257 2.0943950000000005
+      name "cap screw(1)"
+    }
+    CapScrew {
+      translation -0.08 -0.08 0.004998810332227679
+      rotation 0.5773502691896257 0.5773502691896257 -0.5773502691896257 2.0943950000000005
+      name "cap screw(2)"
+    }
+    CapScrew {
+      translation -0.08 0.08 0.004998810332227679
+      rotation 0.5773502691896257 0.5773502691896257 -0.5773502691896257 2.0943950000000005
+      name "cap screw(4)"
+    }
+    Solid {
+      translation 7.2661907318025e-19 9.966019997913747e-23 0.059942553339391136
+      rotation -5.937004533191998e-19 5.936204205312807e-19 -1 1.570804839927935
+      children [
+        Shape {
+          appearance BrushedAluminium {
+            textureTransform TextureTransform {
+              rotation 1.5708
+            }
+          }
+          geometry DEF CYLINDER Cylinder {
+            height 0.1
+            radius 0.02
+          }
+        }
+        BallJoint {
+          jointParameters BallJointParameters {
+            position -5.428401638142632e-20
+            anchor 0 0 0.05
+          }
+          device [
+            RotationalMotor {
+              name "motor 3"
+              maxVelocity 1
+              minPosition -1.57
+              maxPosition 1.57
+            }
+            DEF PS3 PositionSensor {
+            }
+          ]
+          device2 [
+            RotationalMotor {
+              name "motor 1"
+              maxVelocity 1
+              minPosition -1.5707963267948966
+              maxPosition 1.5707963267948966
+            }
+            DEF PS1 PositionSensor {
+            }
+          ]
+          device3 [
+            RotationalMotor {
+              name "motor 2"
+              maxVelocity 1
+              minPosition -1.5707963267948966
+              maxPosition 1.5707963267948966
+            }
+          ]
+          endPoint DEF Joint Solid {
+            translation 0 0 0.05
+            rotation -1.1194021427903198e-15 -3.942711849314466e-16 1 0.6160346226239136
+            children [
+              Shape {
+                appearance BrushedAluminium {
+                }
+                geometry DEF SPHERE Sphere {
+                  radius 0.03
+                  subdivision 32
+                  ico FALSE
+                }
+              }
+              DEF Panel Solid {
+                translation 0 0 0.033
+                rotation 0 0 1 -1.570805
+                children [
+                  Shape {
+                    appearance HammeredCopper {
+                      textureTransform TextureTransform {
+                        scale 0.2 1
+                      }
+                    }
+                    geometry DEF plane Cylinder {
+                      height 0.01
+                    }
+                  }
+                ]
+                boundingObject USE plane
+                physics Physics {
+                }
+              }
+            ]
+            boundingObject USE SPHERE
+            physics Physics {
+            }
+          }
+        }
+      ]
+      boundingObject USE CYLINDER
+      physics Physics {
+      }
+    }
+  ]
+  controller "<extern>"
+  supervisor TRUE
+  cpuConsumption 50
+}
+DEF Ball Solid {
+  translation 0 0 0.3
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 1 0
+        metalness 0
+        IBLStrength 0
+      }
+      geometry DEF ball Sphere {
+        radius 0.075
+        subdivision 3
+      }
+    }
+  ]
+  boundingObject USE ball
+  physics Physics {
+  }
+}
